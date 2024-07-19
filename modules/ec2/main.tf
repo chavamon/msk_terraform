@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.aws_region
+}
+
 resource "aws_security_group" "ec2_sg" {
   name        = "ec2_sg"
   description = "Security group for EC2 instances"
@@ -26,10 +30,17 @@ resource "aws_security_group" "ec2_sg" {
 
 resource "aws_instance" "ec2_instance" {
   count         = 3
-  ami           = "ami-0b72821e2f351e396" # replace with your AMI ID
+  ami           = "ami-01fccab91b456acc2" # replace with your AMI ID
   instance_type = "t2.micro"
-  key_name      = "my_key_pair" # replace with your key pair name
+  key_name      = "FirstJavaEndpointAppKeyPair" # replace with your key pair name
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo yum update -y
+              sudo yum install -y java-21
+              java -version
+              EOF
 
   tags = {
     Name = "EC2Instance${count.index}"

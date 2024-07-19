@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.aws_region
+}
+
 resource "aws_security_group" "msk_sg" {
   name        = "msk_sg"
   description = "Security group for MSK cluster"
@@ -17,15 +21,15 @@ resource "aws_security_group" "msk_sg" {
   }
 }
 
-resource "aws_msk_cluster" "msk_cluster" {
-  cluster_name = "msk_cluster"
-  kafka_version = "2.2.1"
+
+resource "aws_msk_cluster" "MyMSKCluster" {
+  cluster_name = "MyMSKCluster"
+  kafka_version = "3.5.1"
   number_of_broker_nodes = 3
 
   broker_node_group_info {
-    instance_type   = "kafka.m5.large"
-    ebs_volume_size = 1000
-    client_subnets  = ["subnet-abcde012", "subnet-bcde012a", "subnet-fghi345a"]
+    instance_type   = "kafka.t3.small"
+    client_subnets  = ["subnet-0feb19970c6ae1de5", "subnet-0b5f47644dcc2eb49", "subnet-071b83c87fe7f89fd"]
     security_groups = [aws_security_group.msk_sg.id]
   }
 
@@ -36,7 +40,7 @@ resource "aws_msk_cluster" "msk_cluster" {
 }
 
 resource "aws_msk_configuration" "example" {
-  kafka_versions    = ["2.2.1"]
+  kafka_versions    = ["3.5.1"]
   name              = "example"
   server_properties = <<-PROPERTIES
     auto.create.topics.enable = true
