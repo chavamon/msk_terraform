@@ -5,8 +5,7 @@
 # Amazon Corretto 21 JDK
 # Docker
 
-
-
+# Terraform configuration for creating an EC2 instance with required software installed
 provider "aws" {
   region = var.aws_region
 }
@@ -16,6 +15,7 @@ resource "aws_security_group" "ec2_sg" {
   name        = "ec2_sg"
   description = "Security group for EC2 instances"
 
+  # HTTP access
   ingress {
     from_port   = 80
     to_port     = 80
@@ -23,6 +23,7 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # SSH access
   ingress {
     from_port   = 22
     to_port     = 22
@@ -30,6 +31,7 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  #
   egress {
     from_port   = 0
     to_port     = 0
@@ -38,6 +40,7 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
+# EC2 instance with required software installed
 resource "aws_instance" "ec2_instance" {
   count         = 3
   ami           = "ami-01fccab91b456acc2" # replace with your AMI ID
@@ -50,10 +53,12 @@ resource "aws_instance" "ec2_instance" {
     delete_on_termination = true
   }
 
+  # Tags for EC2 instances
   tags = {
     Name = "EC2Instance${count.index}"
   }
 
+  # Provisioner block for remote-exec
   provisioner "remote-exec" {
     inline = [
       "sudo yum update -y",
@@ -72,6 +77,7 @@ resource "aws_instance" "ec2_instance" {
     ]
   }
 
+  # Connection block for SSH
   connection {
     type        = "ssh"
     user        = "ec2-user"
