@@ -2,6 +2,7 @@ provider "aws" {
   region = var.aws_region
 }
 
+# Security groups for EC2 instances
 resource "aws_security_group" "ec2_sg" {
   name        = "ec2_sg"
   description = "Security group for EC2 instances"
@@ -28,6 +29,8 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
+
+
 resource "aws_instance" "ec2_instance" {
   count         = 3
   ami           = "ami-01fccab91b456acc2" # replace with your AMI ID
@@ -46,3 +49,4 @@ resource "aws_instance" "ec2_instance" {
     Name = "EC2Instance${count.index}"
   }
 }
+
