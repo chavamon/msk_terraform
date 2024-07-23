@@ -76,7 +76,6 @@ resource "aws_instance" "jenkins_instance" {
       host        = self.public_ip
     }
   }
-
 }
 
 output "jenkins_instance_public_ip" {

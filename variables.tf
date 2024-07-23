@@ -3,7 +3,13 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-/*variable "instance_type" {
+/*variable "ssh_access_cidr" {
+  description = "CIDR block for SSH access"
+  type        = string
+  default     = "18.206.107.24/29" # Update this default value as needed
+}
+
+variable "instance_type" {
   description = "The instance type of the EC2 instances"
   default     = "t2.micro"
 }
