@@ -9,3 +9,7 @@ module "ec2" {
 module "ec2-front" {
   source = "modules/ec2-reactjs"
 }
+
+module "alb" {
+  source = "modules/alb"
+}
