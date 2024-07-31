@@ -13,3 +13,7 @@ module "ec2-front" {
 module "alb" {
   source = "modules/alb"
 }
+
+module "mysql" {
+  source = "modules/mysql"
+}
