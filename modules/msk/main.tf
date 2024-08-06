@@ -1,4 +1,4 @@
-# Description: This file contains the terraform code to create an MSK cluster with the configuration described below:
+# Description: This file contains the terraform code to create one MSK cluster with the configuration described below:
 # * The MSK cluster will be created with:
 #   ** One security group that allows all traffic.
 #   ** One configuration that enables auto topic creation and topic deletion.
@@ -31,7 +31,6 @@ resource "aws_security_group" "msk_sg" {
   }
 }
 
-
 resource "aws_msk_cluster" "MyMSKCluster" {
   cluster_name = "MyMSKCluster"
   kafka_version = var.kafka_version
@@ -44,12 +43,22 @@ resource "aws_msk_cluster" "MyMSKCluster" {
   }
 
   configuration_info {
-    arn      = aws_msk_configuration.example.arn
-    revision = aws_msk_configuration.example.latest_revision
+    arn      = aws_msk_configuration.config.arn
+    revision = aws_msk_configuration.config.latest_revision
   }
 }
 
-resource "aws_msk_configuration" "example" {
+# Create a VPC for the MSK cluster
+resource "aws_vpc" "kafka_vpc" {
+  cidr_block = "10.0.0.0/16"  # CIDR block for the VPC
+
+  # Tags for the VPC
+  tags = {
+    Name = "kafka-vpc"
+  }
+}
+
+resource "aws_msk_configuration" "config" {
   kafka_versions    = [var.kafka_version]
   name              = "example"
   server_properties = <<-PROPERTIES
